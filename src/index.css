@@ -13,7 +13,17 @@
   .press-effect {
     @apply transition-all duration-150 active:translate-y-1 active:shadow-sm;
   }
+
   .hover-3d {
     @apply hover:-translate-y-1 hover:shadow-3d-cyan transition-all duration-300;
+  }
+
+  /* 3D Core Utilities Needed for Parallax/Depth */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .transform-style-3d {
+    transform-style: preserve-3d;
   }
 }
