@@ -3,7 +3,15 @@ import { Menu, X } from 'lucide-react';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const links = ['About', 'Experience', 'Projects', 'Certifications', 'Skills', 'Contact'];
+    const links = [
+        { name: 'About', href: '#about' },
+        { name: 'Experience', href: '#experience' },
+        { name: 'Projects', href: '#projects' },
+        { name: 'Paper Visualizations', href: '#paper-visualizations' },
+        { name: 'Certifications', href: '#certifications' },
+        { name: 'Skills', href: '#skills' },
+        { name: 'Contact', href: '#contact' }
+    ];
 
     return (
         <nav className="fixed w-full z-50 top-0 start-0 border-b border-card-blue bg-space-blue/80 backdrop-blur-md">
@@ -22,13 +30,13 @@ const Navbar = () => {
                 <div className={`${isOpen ? 'block' : 'hidden'} w-full md:block md:w-auto`}>
                     <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-card-blue rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
                         {links.map((link) => (
-                            <li key={link}>
+                            <li key={link.name}>
                                 <a
-                                    href={`#${link.toLowerCase()}`}
+                                    href={link.href}
                                     className="block py-2 px-3 text-slate-300 hover:text-neon-cyan transition-colors duration-300 rounded md:bg-transparent md:p-0 press-effect"
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    {link}
+                                    {link.name}
                                 </a>
                             </li>
                         ))}

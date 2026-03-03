@@ -1,37 +1,24 @@
-import { Code2, Github, ExternalLink } from 'lucide-react';
+import { BookOpen, Github, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 
-const Projects = () => {
-    const projects = [
+const PaperVisualizations = () => {
+    const papers = [
         {
-            title: 'MultiModal RAG System',
-            image: '/images/projects/rag.png',
-            desc: 'A Retrieval-Augmented Generation system combining text and image data for enhanced responses. Uses Hybrid IR, Dense Vectors, and Neural Reranking.',
-            tags: ['Python', 'LangChain', 'FAISS', 'Transformers', 'Cohere'],
-            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/MultiModalRAG'
+            title: 'ResNet 18 Architecture',
+            image: '/images/projects/resnet_paper.png',
+            desc: 'An interactive replication of Deep Residual Learning for Image Recognition, demonstrating identity shortcut connections.',
+            tags: ['Computer Vision', 'PyTorch', 'CNN', 'Deep Learning'],
+            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/ResNet18',
+            git: 'https://github.com/ShivSunder0006/ResNet18'
         },
         {
-            title: 'Footfall Counter',
-            image: '/images/projects/footfall.png',
-            desc: 'Real-time crowd counting application capable of performing analytics on live video streams, deployed on Hugging Face.',
-            tags: ['YOLOv8', 'OpenCV', 'Python', 'Streamlit'],
-            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/FootFall',
-            git: 'https://huggingface.co/spaces/shivsunder0006/FootFall/tree/main'
-        },
-        {
-            title: 'AniRecs AI',
-            image: '/images/projects/anirecs.png',
-            desc: 'Anime recommendation system leveraging NLP embeddings and semantic similarity to provide highly personalized content matching.',
-            tags: ['Transformers', 'Gradio', 'Python', 'Hugging Face'],
-            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/AniRecs_Ai'
-        },
-        {
-            title: 'License Plate Detection',
-            image: '/images/projects/license.png',
-            desc: 'A real-time Automatic Number Plate Recognition (ANPR) system processing vehicle images using object detection and OCR algorithms.',
-            tags: ['TensorFlow', 'YOLO', 'OCR', 'Python'],
-            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/npds'
+            title: 'Attention Is All You Need',
+            image: '/images/projects/attention_paper.png',
+            desc: 'Interactive visualization of the Transformer architecture, showcasing the multi-head self-attention mechanisms and encoder-decoder stack.',
+            tags: ['NLP', 'Transformers', 'PyTorch', 'Attention'],
+            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/AIAYN',
+            git: 'https://github.com/ShivSunder0006/AttentionIsAllYouNeed'
         }
     ];
 
@@ -54,7 +41,7 @@ const Projects = () => {
     };
 
     return (
-        <section id="projects" className="py-20 max-w-6xl mx-auto px-6">
+        <section id="paper-visualizations" className="py-20 max-w-6xl mx-auto px-6">
             <motion.h2
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -63,7 +50,7 @@ const Projects = () => {
                 className="text-3xl md:text-4xl font-bold mb-12 text-white flex items-center gap-4"
             >
                 <span className="w-16 h-1 bg-neon-cyan hidden md:block rounded-full shadow-[0_0_10px_rgba(56,189,248,0.8)]"></span>
-                Featured Projects
+                Paper Visualizations
             </motion.h2>
 
             <motion.div
@@ -73,8 +60,8 @@ const Projects = () => {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
             >
-                {projects.map((p, i) => (
-                    <motion.div key={i} variants={cardVariants} style={{ zIndex: projects.length - i }}>
+                {papers.map((p, i) => (
+                    <motion.div key={i} variants={cardVariants} style={{ zIndex: papers.length - i }}>
                         <Tilt
                             tiltMaxAngleX={10}
                             tiltMaxAngleY={10}
@@ -88,7 +75,7 @@ const Projects = () => {
                                 <div className="h-56 w-full relative border-b border-slate-700/50 overflow-hidden transform-style-3d" style={{ transform: "translateZ(40px)" }}>
                                     <img src={p.image} alt={p.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                     <div className="absolute inset-0 bg-space-blue/60 group-hover:bg-transparent transition-all duration-300 flex items-center justify-center">
-                                        <Code2 className="w-16 h-16 text-white/50 group-hover:text-neon-cyan transition-all duration-500 group-hover:scale-125 drop-shadow-md" style={{ transform: "translateZ(60px)" }} />
+                                        <BookOpen className="w-16 h-16 text-white/50 group-hover:text-neon-cyan transition-all duration-500 group-hover:scale-125 drop-shadow-md" style={{ transform: "translateZ(60px)" }} />
                                     </div>
                                 </div>
                                 <div className="p-8 flex-1 flex flex-col transform-style-3d" style={{ transform: "translateZ(30px)" }}>
@@ -133,4 +120,4 @@ const Projects = () => {
     );
 };
 
-export default Projects;
+export default PaperVisualizations;

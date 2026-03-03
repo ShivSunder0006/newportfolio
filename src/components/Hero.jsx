@@ -69,7 +69,7 @@ const Hero = () => {
                 >
                     <motion.div
                         className="w-72 h-72 md:w-96 md:h-96 rounded-full border-4 border-neon-cyan/50 shadow-[0_0_50px_rgba(56,189,248,0.4)] flex items-center justify-center overflow-hidden relative group"
-                        whileHover={{ scale: 1.05, rotateZ: 5, boxShadow: "0 0 80px rgba(56,189,248,0.6)" }}
+                        whileHover={{ scale: 1.05, boxShadow: "0 0 80px rgba(56,189,248,0.6)" }}
                         transition={{ type: "spring", stiffness: 300 }}
                     >
                         <img src="/images/avatar.png" alt="Shiv Sunder Pradhan" className="w-full h-full object-cover object-top transform transition-transform duration-700 group-hover:scale-110" />
