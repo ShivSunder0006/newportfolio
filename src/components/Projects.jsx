@@ -76,11 +76,11 @@ const Projects = () => {
                 {projects.map((p, i) => (
                     <motion.div key={i} variants={cardVariants} style={{ zIndex: projects.length - i }}>
                         <Tilt
-                            tiltMaxAngleX={10}
-                            tiltMaxAngleY={10}
+                            tiltMaxAngleX={5}
+                            tiltMaxAngleY={5}
                             perspective={1000}
                             transitionSpeed={1000}
-                            scale={1.02}
+                            scale={1.01}
                             gyroscope={true}
                             className="h-full"
                         >
@@ -103,22 +103,22 @@ const Projects = () => {
                                             </span>
                                         ))}
                                     </div>
-                                    <div className="flex gap-4 mt-auto" style={{ transform: "translateZ(25px)" }}>
+                                    <div className="flex gap-4 mt-auto pt-4 relative z-50 pointer-events-auto" style={{ transform: "translateZ(30px)" }}>
                                         {p.git ? (
-                                            <a href={p.git} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white press-effect">
+                                            <a href={p.git} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-neon-cyan bg-slate-800/40 hover:bg-slate-700/60 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect border border-slate-700/50 hover:border-neon-cyan/50 shadow-lg">
                                                 <Github className="w-4 h-4" /> Code
                                             </a>
                                         ) : (
-                                            <button className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white press-effect cursor-not-allowed opacity-50">
+                                            <button className="flex items-center gap-2 text-sm font-semibold text-slate-300 bg-slate-800/40 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect cursor-not-allowed opacity-50 border border-slate-700/50 shadow-lg">
                                                 <Github className="w-4 h-4" /> Code
                                             </button>
                                         )}
                                         {p.liveDemo ? (
-                                            <a href={p.liveDemo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-neon-indigo hover:text-white press-effect ml-auto">
+                                            <a href={p.liveDemo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-neon-indigo hover:text-white bg-neon-indigo/10 hover:bg-neon-indigo/20 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect ml-auto border border-neon-indigo/20 hover:border-neon-indigo/50 shadow-lg">
                                                 Live Demo <ExternalLink className="w-4 h-4" />
                                             </a>
                                         ) : (
-                                            <button className="flex items-center gap-2 text-sm font-semibold text-neon-indigo hover:text-white press-effect ml-auto cursor-not-allowed opacity-50">
+                                            <button className="flex items-center gap-2 text-sm font-semibold text-neon-indigo bg-neon-indigo/10 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect ml-auto cursor-not-allowed opacity-50 border border-neon-indigo/20 shadow-lg">
                                                 Live Demo <ExternalLink className="w-4 h-4" />
                                             </button>
                                         )}
