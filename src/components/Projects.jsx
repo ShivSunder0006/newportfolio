@@ -76,12 +76,12 @@ const Projects = () => {
                 {projects.map((p, i) => (
                     <motion.div key={i} variants={cardVariants} style={{ zIndex: projects.length - i }}>
                         <Tilt
-                            tiltMaxAngleX={5}
-                            tiltMaxAngleY={5}
+                            tiltMaxAngleX={1}
+                            tiltMaxAngleY={1}
                             perspective={1000}
                             transitionSpeed={1000}
                             scale={1.01}
-                            gyroscope={true}
+                            gyroscope={false}
                             className="h-full"
                         >
                             <div className="bg-card-blue border border-slate-700/50 rounded-2xl overflow-hidden shadow-3d-dark flex flex-col group h-full transform-style-3d">
@@ -103,7 +103,7 @@ const Projects = () => {
                                             </span>
                                         ))}
                                     </div>
-                                    <div className="flex gap-4 mt-auto pt-4 relative z-50 pointer-events-auto" style={{ transform: "translateZ(30px)" }}>
+                                    <div className="flex gap-4 mt-auto pt-4 relative z-50 pointer-events-auto">
                                         {p.git ? (
                                             <a href={p.git} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-neon-cyan bg-slate-800/40 hover:bg-slate-700/60 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect border border-slate-700/50 hover:border-neon-cyan/50 shadow-lg">
                                                 <Github className="w-4 h-4" /> Code
