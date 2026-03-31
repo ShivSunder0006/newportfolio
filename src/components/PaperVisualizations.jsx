@@ -1,8 +1,11 @@
-import { BookOpen, Github, ExternalLink } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { BookOpen, Github, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
+import { useState } from 'react';
 
 const PaperVisualizations = () => {
+    const [showAllPapers, setShowAllPapers] = useState(false);
+
     const papers = [
         {
             title: 'ResNet 18 Architecture',
@@ -19,8 +22,18 @@ const PaperVisualizations = () => {
             tags: ['NLP', 'Transformers', 'PyTorch', 'Attention'],
             liveDemo: 'https://huggingface.co/spaces/shivsunder0006/AIAYN',
             git: 'https://github.com/ShivSunder0006/AttentionIsAllYouNeed'
+        },
+        {
+            title: 'LoRA: Low-Rank Adaptation',
+            image: '/images/projects/resnet_paper.png', // Placeholder, please update
+            desc: 'Interactive visualization and implementation of Low-Rank Adaptation of Large Language Models.',
+            tags: ['LLM', 'Fine-Tuning', 'Transformers'],
+            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/LoRA',
+            git: 'https://github.com/ShivSunder0006/loRA'
         }
     ];
+
+    const displayedPapers = showAllPapers ? papers : papers.slice(0, 2);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -31,12 +44,18 @@ const PaperVisualizations = () => {
     };
 
     const cardVariants = {
-        hidden: { opacity: 0, y: 50, rotateX: -15 },
+        hidden: { opacity: 0, y: 50, rotateX: -15, scale: 0.9 },
         visible: {
             opacity: 1,
             y: 0,
             rotateX: 0,
-            transition: { type: "spring", stiffness: 100, damping: 12 }
+            scale: 1,
+            transition: { type: "spring", stiffness: 100, damping: 15 }
+        },
+        exit: {
+            opacity: 0,
+            scale: 0.9,
+            transition: { duration: 0.2 }
         }
     };
 
@@ -59,9 +78,19 @@ const PaperVisualizations = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
+                layout
             >
-                {papers.map((p, i) => (
-                    <motion.div key={i} variants={cardVariants} style={{ zIndex: papers.length - i }}>
+                <AnimatePresence mode="popLayout">
+                {displayedPapers.map((p, i) => (
+                    <motion.div 
+                        key={p.title + i} 
+                        variants={cardVariants} 
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        layout
+                        style={{ zIndex: papers.length - i }}
+                    >
                         <Tilt
                             tiltMaxAngleX={1}
                             tiltMaxAngleY={1}
@@ -115,7 +144,24 @@ const PaperVisualizations = () => {
                         </Tilt>
                     </motion.div>
                 ))}
+                </AnimatePresence>
             </motion.div>
+
+            {papers.length > 2 && (
+                <motion.div 
+                    layout
+                    className="mt-16 flex justify-center"
+                >
+                    <button
+                        onClick={() => setShowAllPapers(!showAllPapers)}
+                        className="group relative px-8 py-3 rounded-full bg-space-blue/50 border border-neon-cyan/50 text-neon-cyan font-bold overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] flex items-center gap-2"
+                    >
+                        <div className="absolute inset-0 bg-neon-cyan/10 group-hover:bg-neon-cyan/20 transition-colors"></div>
+                        <span className="relative z-10">{showAllPapers ? "Show Less" : "Show More"}</span>
+                        {showAllPapers ? <ChevronUp className="relative z-10 w-5 h-5 group-hover:-translate-y-1 transition-transform" /> : <ChevronDown className="relative z-10 w-5 h-5 group-hover:translate-y-1 transition-transform" />}
+                    </button>
+                </motion.div>
+            )}
         </section>
     );
 };

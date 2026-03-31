@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { BrainCircuit } from 'lucide-react';
+import HeroBackground3D from './HeroBackground3D';
 
 const Hero = () => {
     // 3D Text Animation Variants
@@ -32,8 +33,9 @@ const Hero = () => {
     };
 
     return (
-        <section id="hero" className="min-h-screen flex items-center justify-center pt-20 perspective-1000">
-            <div className="grid md:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-6 w-full">
+        <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 perspective-1000 overflow-hidden">
+            <HeroBackground3D />
+            <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-6 w-full">
                 <motion.div
                     className="space-y-6 z-10"
                     variants={textVariants}

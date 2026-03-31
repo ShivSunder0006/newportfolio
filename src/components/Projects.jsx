@@ -1,8 +1,11 @@
-import { Code2, Github, ExternalLink } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Code2, Github, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
+import { useState } from 'react';
 
 const Projects = () => {
+    const [showAll, setShowAll] = useState(false);
+    
     const projects = [
         {
             title: 'MultiModal RAG System',
@@ -32,8 +35,18 @@ const Projects = () => {
             desc: 'A real-time Automatic Number Plate Recognition (ANPR) system processing vehicle images using object detection and OCR algorithms.',
             tags: ['TensorFlow', 'YOLO', 'OCR', 'Python'],
             liveDemo: 'https://huggingface.co/spaces/shivsunder0006/npds'
+        },
+        {
+            title: 'FSSAI Compliance Checker',
+            image: '/images/projects/rag.png', // Placeholder, please update
+            desc: 'Food Safety Compliance Pipeline and UI redesign for rigorous standard checks.',
+            tags: ['React', 'Python', 'Compliance'],
+            liveDemo: 'https://huggingface.co/spaces/shivsunder0006/FSSAI',
+            git: 'https://github.com/ShivSunder0006/FSSAI3'
         }
     ];
+
+    const displayedProjects = showAll ? projects : projects.slice(0, 4);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -44,12 +57,18 @@ const Projects = () => {
     };
 
     const cardVariants = {
-        hidden: { opacity: 0, y: 50, rotateX: -15 },
+        hidden: { opacity: 0, y: 50, rotateX: -15, scale: 0.9 },
         visible: {
             opacity: 1,
             y: 0,
             rotateX: 0,
-            transition: { type: "spring", stiffness: 100, damping: 12 }
+            scale: 1,
+            transition: { type: "spring", stiffness: 100, damping: 15 }
+        },
+        exit: {
+            opacity: 0,
+            scale: 0.9,
+            transition: { duration: 0.2 }
         }
     };
 
@@ -72,9 +91,19 @@ const Projects = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
+                layout
             >
-                {projects.map((p, i) => (
-                    <motion.div key={i} variants={cardVariants} style={{ zIndex: projects.length - i }}>
+                <AnimatePresence mode="popLayout">
+                {displayedProjects.map((p, i) => (
+                    <motion.div 
+                        key={p.title + i} 
+                        variants={cardVariants} 
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        layout
+                        style={{ zIndex: projects.length - i }}
+                    >
                         <Tilt
                             tiltMaxAngleX={1}
                             tiltMaxAngleY={1}
@@ -128,7 +157,24 @@ const Projects = () => {
                         </Tilt>
                     </motion.div>
                 ))}
+                </AnimatePresence>
             </motion.div>
+
+            {projects.length > 4 && (
+                <motion.div 
+                    layout
+                    className="mt-16 flex justify-center"
+                >
+                    <button
+                        onClick={() => setShowAll(!showAll)}
+                        className="group relative px-8 py-3 rounded-full bg-space-blue/50 border border-neon-cyan/50 text-neon-cyan font-bold overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] flex items-center gap-2"
+                    >
+                        <div className="absolute inset-0 bg-neon-cyan/10 group-hover:bg-neon-cyan/20 transition-colors"></div>
+                        <span className="relative z-10">{showAll ? "Show Less" : "Show More"}</span>
+                        {showAll ? <ChevronUp className="relative z-10 w-5 h-5 group-hover:-translate-y-1 transition-transform" /> : <ChevronDown className="relative z-10 w-5 h-5 group-hover:translate-y-1 transition-transform" />}
+                    </button>
+                </motion.div>
+            )}
         </section>
     );
 };

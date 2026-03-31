@@ -1,6 +1,18 @@
+import { useState } from 'react';
 import { ChevronRight, Github, Linkedin, Mail } from 'lucide-react';
 
 const Contact = () => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const subject = encodeURIComponent(name);
+        const body = encodeURIComponent(`From: ${name} (${email})\n\n${message}`);
+        window.location.href = `mailto:shivsunderpradhan12@gmail.com?subject=${subject}&body=${body}`;
+    };
+
     return (
         <section id="contact" className="py-24 max-w-4xl mx-auto px-6">
             <div className="bg-card-blue border border-neon-cyan/30 rounded-3xl p-8 md:p-12 shadow-3d-cyan relative overflow-hidden">
@@ -13,22 +25,43 @@ const Contact = () => {
                     <p className="text-slate-400">Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
                 </div>
 
-                <form className="relative z-10 max-w-xl mx-auto space-y-6">
+                <form onSubmit={handleSubmit} className="relative z-10 max-w-xl mx-auto space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-slate-300 ml-1">Name</label>
-                            <input type="text" placeholder="John Doe" className="w-full bg-space-blue border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-all" />
+                            <input 
+                                type="text" 
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                                placeholder="John Doe" 
+                                className="w-full bg-space-blue border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-all" 
+                            />
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-slate-300 ml-1">Email</label>
-                            <input type="email" placeholder="john@example.com" className="w-full bg-space-blue border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-all" />
+                            <input 
+                                type="email" 
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                placeholder="john@example.com" 
+                                className="w-full bg-space-blue border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-all" 
+                            />
                         </div>
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-slate-300 ml-1">Message</label>
-                        <textarea rows="4" placeholder="Hello..." className="w-full bg-space-blue border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-all"></textarea>
+                        <textarea 
+                            rows="4" 
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            required
+                            placeholder="Hello..." 
+                            className="w-full bg-space-blue border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-all"
+                        ></textarea>
                     </div>
-                    <button type="button" className="w-full py-4 bg-gradient-to-r from-neon-cyan to-neon-indigo text-space-blue font-extrabold text-lg rounded-xl shadow-3d-cyan hover-3d press-effect flex items-center justify-center gap-2">
+                    <button type="submit" className="w-full py-4 bg-gradient-to-r from-neon-cyan to-neon-indigo text-space-blue font-extrabold text-lg rounded-xl shadow-3d-cyan hover-3d press-effect flex items-center justify-center gap-2 cursor-pointer">
                         Send Message <ChevronRight className="w-5 h-5" />
                     </button>
                 </form>
@@ -40,7 +73,7 @@ const Contact = () => {
                     <a href="https://www.linkedin.com/in/shiv-sunder-pradhan-1a0a81194/" target="_blank" rel="noopener noreferrer" className="p-4 bg-space-blue text-slate-300 rounded-2xl border border-slate-700 shadow-3d-dark hover-3d press-effect hover:text-neon-indigo hover:border-neon-indigo transition-colors">
                         <Linkedin className="w-6 h-6" />
                     </a>
-                    <a href="mailto:shivsunder46@gmail.com" className="p-4 bg-space-blue text-slate-300 rounded-2xl border border-slate-700 shadow-3d-dark hover-3d press-effect hover:text-neon-cyan hover:border-neon-cyan transition-colors">
+                    <a href="mailto:shivsunderpradhan12@gmail.com" className="p-4 bg-space-blue text-slate-300 rounded-2xl border border-slate-700 shadow-3d-dark hover-3d press-effect hover:text-neon-cyan hover:border-neon-cyan transition-colors">
                         <Mail className="w-6 h-6" />
                     </a>
                 </div>
