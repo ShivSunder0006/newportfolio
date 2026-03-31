@@ -1,0 +1,100 @@
+Reading an academic machine learning paper can often feel like deciphering an ancient language. Dense mathematics, architectural diagrams that look like abstract art, and complex jargon can obscure the elegant ideas underneath. 
+
+But what if we could *play* with these architectures?
+
+In this article, we'll explore how to bridge the gap between academic research and accessible learning by building interactive visualizers for two cornerstone architectures: **ResNet-18** and **Transformers**. Translating dense research into working, visual code is not just a great learning tool—it’s an essential skill for modern AI engineers to communicate complex systems.
+
+---
+
+## 1. Visualizing Deep Residual Learning (ResNet-18)
+
+[Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385) introduced the concept of skip connections, enabling the training of incredibly deep networks by solving the vanishing gradient problem.
+
+I recently built an [Interactive Streamlit Explainer for ResNet-18](https://github.com/ShivSunder0006/ResNet18). The application includes dynamic RAG interaction, live feature mapping, and flowchart models.
+
+### The Residual Block Concept
+
+At the heart of ResNet is the Residual Block. Instead of expecting the layers to fit a desired underlying mapping directly, we let them fit a residual mapping. 
+
+Here is how we visualize it dynamically:
+
+<MermaidChart chart="graph TD; Input[Input Vector x] --> W1[Weight Layer 1]; W1 --> R1[ReLU]; R1 --> W2[Weight Layer 2]; Input --> Shortcut[Identity Shortcut]; W2 --> Add((+)); Shortcut --> Add; Add --> R2[ReLU Output]" />
+
+> **Why this matters:** The shortcut connection performs identity mapping. If the optimal mapping is closer to an identity function than a zero mapping, it's easier for the solver to drive the weights of the multiple nonlinear layers toward zero than to learn an identity mapping from scratch.
+
+### Building the Live Feature Mapper
+
+To make this interactive, we can use Streamlit and PyTorch to extract intermediate layer activations. When a user uploads an image, we pass it through ResNet-18 and visualize the intermediate feature maps.
+
+```python
+import streamlit as st
+import torch
+import torch.nn as nn
+from torchvision.models import resnet18, ResNet18_Weights
+import matplotlib.pyplot as plt
+
+# Load pre-trained ResNet18
+@st.cache_resource
+def load_model():
+    model = resnet18(weights=ResNet18_Weights.DEFAULT)
+    return model
+
+st.title("ResNet-18 Interactive Explainer 🦀")
+st.markdown("Upload an image below to see how ResNet-18 activates its layers in real-time.")
+
+uploaded_file = st.file_uploader("Choose an image...", type=["png", "jpg", "jpeg"])
+
+if uploaded_file is not None:
+    # 2. Extracting Features using a Hooks
+    activation = {}
+    def get_activation(name):
+        def hook(model, input, output):
+            activation[name] = output.detach()
+        return hook
+
+    model = load_model()
+    model.layer1[0].conv1.register_forward_hook(get_activation('layer1_conv1'))
+    
+    # 4. Visualization
+    st.subheader("Feature Map Extraction: Layer 1")
+    fig, axarr = plt.subplots(1, 4)
+    for i in range(4): # Show first 4 filters
+        axarr[i].imshow(activation['layer1_conv1'][0, i].numpy(), cmap='viridis')
+        axarr[i].axis('off')
+    st.pyplot(fig)
+```
+
+By adding a dynamic RAG component using a tool like LangChain, users can highlight a part of the visualization and ask, "Why did the authors choose a 3x3 convolution here?" directly querying the paper.
+
+---
+
+## 2. Visualizing Transformers: Attention is All You Need
+
+While ResNets are built for vision, the **Transformer architecture** revolutionized sequence modeling. The concept of "Self-Attention" is notoriously difficult to grasp up front.
+
+### The Self-Attention Flowchart
+
+Instead of sequential processing, self-attention maps inputs against each other to find relationships.
+
+<MermaidChart chart="graph TD; X[Input Sequence] --> Q[Queries]; X --> K[Keys]; X --> V[Values]; Q --> Dot[Dot Product]; K --> Dot; Dot --> Scale[Scale Factor]; Scale --> Softmax[Softmax Weights]; Softmax --> Multi[MatMul with Values]; V --> Multi; Multi --> Out[Contextual Embeddings]" />
+
+### Interactive Attention Heatmaps
+
+To demystify this, we can build a visualizer that shows the attention weights between words. Hover over the cells in the custom interactive component below to see the precise attention relationships. You'll notice how "it" intrinsically links back to "animal".
+
+<InteractiveHeatmap />
+
+Interactive heatmaps allow users to hover over individual cells and see the exact weight value, making the abstract concept of "attention" tangible and quantifiable.
+
+---
+
+## The Intersection of AI and UI
+
+Building these tools is not just an exercise in deploying code; it's an exercise in empathy. By combining frameworks like Streamlit with visualization libraries like Plotly or custom React diagrams, and sprinkling in intelligent LLM-driven chat (RAG), we can transform isolated Github repos into educational hubs.
+
+### Key Takeaways
+1. **Interactivity builds intuition:** Let users break things.
+2. **Visuals over equations:** Flowcharts and heatmaps are worth a thousand mathematical symbols.
+3. **Contextualize with RAG:** Allow users to chat with the paper directly while viewing the model.
+
+*Have you built an interactive explainer for a paper? Let's connect and share ideas on how to make AI more accessible.*
