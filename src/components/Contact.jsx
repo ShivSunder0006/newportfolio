@@ -1,16 +1,46 @@
 import { useState } from 'react';
 import { ChevronRight, Github, Linkedin, Mail } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState(null);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const subject = encodeURIComponent(name);
-        const body = encodeURIComponent(`From: ${name} (${email})\n\n${message}`);
-        window.location.href = `mailto:shivsunderpradhan12@gmail.com?subject=${subject}&body=${body}`;
+        setIsSubmitting(true);
+        setSubmitStatus(null);
+
+        try {
+            await emailjs.send(
+                import.meta.env.VITE_EMAILJS_SERVICE_ID,
+                import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+                {
+                    name: name,
+                    email: email,
+                    message: message,
+                },
+                import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+            );
+            
+            setSubmitStatus('success');
+            setName('');
+            setEmail('');
+            setMessage('');
+        } catch (error) {
+            console.error('EmailJS error:', error);
+            setSubmitStatus('error');
+        } finally {
+            setIsSubmitting(false);
+            
+            // Clear status message after 5 seconds
+            setTimeout(() => {
+                setSubmitStatus(null);
+            }, 5000);
+        }
     };
 
     return (
@@ -61,8 +91,25 @@ const Contact = () => {
                             className="w-full bg-space-blue border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-all"
                         ></textarea>
                     </div>
-                    <button type="submit" className="w-full py-4 bg-gradient-to-r from-neon-cyan to-neon-indigo text-space-blue font-extrabold text-lg rounded-xl shadow-3d-cyan hover-3d press-effect flex items-center justify-center gap-2 cursor-pointer">
-                        Send Message <ChevronRight className="w-5 h-5" />
+                    
+                    {submitStatus === 'success' && (
+                        <div className="p-3 bg-neon-cyan/20 border border-neon-cyan text-neon-cyan rounded-xl text-center font-medium shadow-sm transition-all animate-fade-in">
+                            Message sent successfully! ✨ I'll get back to you soon.
+                        </div>
+                    )}
+                    
+                    {submitStatus === 'error' && (
+                        <div className="p-3 bg-red-500/20 border border-red-500 text-red-500 rounded-xl text-center font-medium shadow-sm transition-all animate-fade-in">
+                            Failed to send message. Please try again later.
+                        </div>
+                    )}
+
+                    <button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className={`w-full py-4 bg-gradient-to-r from-neon-cyan to-neon-indigo text-space-blue font-extrabold text-lg rounded-xl shadow-3d-cyan flex items-center justify-center gap-2 transition-all ${isSubmitting ? 'opacity-80 cursor-not-allowed transform translate-y-1' : 'cursor-pointer hover-3d press-effect'}`}
+                    >
+                        {isSubmitting ? 'Sending...' : 'Send Message'} {!isSubmitting && <ChevronRight className="w-5 h-5" />}
                     </button>
                 </form>
 
