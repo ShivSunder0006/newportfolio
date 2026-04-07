@@ -26,4 +26,28 @@
   .transform-style-3d {
     transform-style: preserve-3d;
   }
+
+  .skeleton {
+    @apply relative overflow-hidden bg-slate-800/50 rounded-md;
+  }
+
+  .skeleton::after {
+    @apply absolute inset-0 content-[''];
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(56, 189, 248, 0.05),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }

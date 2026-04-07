@@ -1,8 +1,35 @@
+import React, { useState, useEffect } from 'react';
 import { Database, Terminal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
+import Skeleton from './Skeleton';
+
+const ExperienceSkeleton = ({ i }) => (
+    <div className={`relative flex flex-col md:flex-row items-center justify-between md:justify-normal md:w-1/2 ${i % 2 === 0 ? 'md:pr-12 md:self-start' : 'md:pl-12 md:self-end md:ml-auto'}`}>
+        <div className="w-full bg-card-blue border border-slate-700/50 p-6 rounded-2xl shadow-3d-dark">
+            <div className="flex items-center gap-3 mb-2">
+                <Skeleton className="w-10 h-10 rounded-lg" />
+                <div className="flex-1">
+                    <Skeleton className="h-6 w-3/4 mb-1" />
+                    <Skeleton className="h-4 w-1/2" />
+                </div>
+            </div>
+            <Skeleton className="h-3 w-32 mb-4" />
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-4 w-2/3" />
+        </div>
+    </div>
+);
 
 const Experience = () => {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 1500);
+        return () => clearTimeout(timer);
+    }, []);
+
     const experiences = [
         {
             role: 'Machine Learning Engineer Intern',
@@ -58,47 +85,55 @@ const Experience = () => {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
             >
-                {experiences.map((exp, i) => (
-                    <motion.div
-                        key={i}
-                        variants={itemVariants}
-                        className={`relative flex flex-col md:flex-row items-center justify-between md:justify-normal md:w-1/2 ${i % 2 === 0 ? 'md:pr-12 md:self-start' : 'md:pl-12 md:self-end md:ml-auto'} group`}
-                        style={{ transformStyle: "preserve-3d" }}
-                    >
-                        <div className="absolute left-[-2rem] md:left-auto md:right-[-20px] w-10 h-10 rounded-full bg-space-blue border-4 border-neon-cyan z-10 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.6)]">
-                            <div className="w-3 h-3 bg-neon-cyan rounded-full group-hover:scale-150 transition-transform duration-300"></div>
-                        </div>
-                        {i % 2 !== 0 && <div className="hidden md:block absolute left-[-20px] w-10 h-10 rounded-full bg-space-blue border-4 border-neon-indigo z-10 flex items-center justify-center shadow-[0_0_15px_rgba(129,140,248,0.6)]">
-                            <div className="w-3 h-3 bg-neon-indigo rounded-full group-hover:scale-150 transition-transform duration-300"></div>
-                        </div>}
-
-                        <Tilt
-                            tiltMaxAngleX={8}
-                            tiltMaxAngleY={8}
-                            perspective={1000}
-                            transitionSpeed={1000}
-                            scale={1.02}
-                            gyroscope={true}
-                            className={`w-full ${i % 2 === 0 ? '' : 'ml-4 md:ml-0'}`}
+                {loading ? (
+                    Array(2).fill(0).map((_, i) => (
+                        <motion.div key={`skeleton-${i}`} variants={itemVariants}>
+                            <ExperienceSkeleton i={i} />
+                        </motion.div>
+                    ))
+                ) : (
+                    experiences.map((exp, i) => (
+                        <motion.div
+                            key={i}
+                            variants={itemVariants}
+                            className={`relative flex flex-col md:flex-row items-center justify-between md:justify-normal md:w-1/2 ${i % 2 === 0 ? 'md:pr-12 md:self-start' : 'md:pl-12 md:self-end md:ml-auto'} group`}
+                            style={{ transformStyle: "preserve-3d" }}
                         >
-                            <div className="w-full bg-card-blue border border-slate-700/50 p-6 rounded-2xl shadow-3d-dark transform-style-3d group-hover:border-neon-cyan/50 transition-colors">
-                                <div className="flex items-center gap-3 mb-2" style={{ transform: "translateZ(30px)" }}>
-                                    <div className="p-2 bg-space-blue rounded-lg shadow-inner">
-                                        {exp.icon}
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-bold text-white">{exp.role}</h3>
-                                        <h4 className="text-neon-cyan text-sm">{exp.company}</h4>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-slate-500 mb-4" style={{ transform: "translateZ(10px)" }}>{exp.duration}</p>
-                                <p className="text-slate-400 text-sm leading-relaxed" style={{ transform: "translateZ(20px)" }}>
-                                    {exp.desc}
-                                </p>
+                            <div className="absolute left-[-2rem] md:left-auto md:right-[-20px] w-10 h-10 rounded-full bg-space-blue border-4 border-neon-cyan z-10 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.6)]">
+                                <div className="w-3 h-3 bg-neon-cyan rounded-full group-hover:scale-150 transition-transform duration-300"></div>
                             </div>
-                        </Tilt>
-                    </motion.div>
-                ))}
+                            {i % 2 !== 0 && <div className="hidden md:block absolute left-[-20px] w-10 h-10 rounded-full bg-space-blue border-4 border-neon-indigo z-10 flex items-center justify-center shadow-[0_0_15px_rgba(129,140,248,0.6)]">
+                                <div className="w-3 h-3 bg-neon-indigo rounded-full group-hover:scale-150 transition-transform duration-300"></div>
+                            </div>}
+
+                            <Tilt
+                                tiltMaxAngleX={8}
+                                tiltMaxAngleY={8}
+                                perspective={1000}
+                                transitionSpeed={1000}
+                                scale={1.02}
+                                gyroscope={true}
+                                className={`w-full ${i % 2 === 0 ? '' : 'ml-4 md:ml-0'}`}
+                            >
+                                <div className="w-full bg-card-blue border border-slate-700/50 p-6 rounded-2xl shadow-3d-dark transform-style-3d group-hover:border-neon-cyan/50 transition-colors">
+                                    <div className="flex items-center gap-3 mb-2" style={{ transform: "translateZ(30px)" }}>
+                                        <div className="p-2 bg-space-blue rounded-lg shadow-inner">
+                                            {exp.icon}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-white">{exp.role}</h3>
+                                            <h4 className="text-neon-cyan text-sm">{exp.company}</h4>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-slate-500 mb-4" style={{ transform: "translateZ(10px)" }}>{exp.duration}</p>
+                                    <p className="text-slate-400 text-sm leading-relaxed" style={{ transform: "translateZ(20px)" }}>
+                                        {exp.desc}
+                                    </p>
+                                </div>
+                            </Tilt>
+                        </motion.div>
+                    ))
+                )}
             </motion.div>
         </section>
     );

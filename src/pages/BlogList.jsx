@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Clock, ChevronRight } from 'lucide-react';
+import Skeleton from '../components/Skeleton';
 
 // Add your blog posts here later
 export const blogPosts = [
@@ -15,7 +16,31 @@ export const blogPosts = [
   }
 ];
 
+const BlogListSkeleton = () => (
+  <div className="bg-card-blue/30 border border-indigo-500/20 rounded-2xl p-6 h-full">
+    <div className="flex items-center gap-4 mb-4">
+      <Skeleton className="w-24 h-4" />
+      <Skeleton className="w-20 h-4" />
+    </div>
+    <Skeleton className="h-8 w-3/4 mb-3" />
+    <Skeleton className="h-4 w-full mb-2" />
+    <Skeleton className="h-4 w-5/6 mb-6" />
+    <div className="flex gap-2 mb-6">
+      <Skeleton className="w-16 h-6 rounded-full" />
+      <Skeleton className="w-16 h-6 rounded-full" />
+    </div>
+    <Skeleton className="h-5 w-28" />
+  </div>
+);
+
 function BlogList() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <motion.div
@@ -34,9 +59,11 @@ function BlogList() {
           Detailed articles, tutorials, and thoughts on software engineering, 3D graphics, and data visualization.
         </p>
 
-        {blogPosts.length > 0 ? (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {blogPosts.map((post, index) => (
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {loading ? (
+            Array(6).fill(0).map((_, i) => <BlogListSkeleton key={i} />)
+          ) : blogPosts.length > 0 ? (
+            blogPosts.map((post, index) => (
               <motion.div
                 key={post.slug}
                 initial={{ opacity: 0, y: 20 }}
@@ -79,18 +106,18 @@ function BlogList() {
                   </div>
                 </Link>
               </motion.div>
-            ))}
-          </div>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-20 bg-card-blue/20 rounded-2xl border border-indigo-500/10"
-          >
-            <h3 className="text-2xl font-semibold text-gray-300 mb-2">No articles yet</h3>
-            <p className="text-gray-500">I'm currently working on some exciting content. Stay tuned!</p>
-          </motion.div>
-        )}
+            ))
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="col-span-full text-center py-20 bg-card-blue/20 rounded-2xl border border-indigo-500/10 w-full"
+            >
+              <h3 className="text-2xl font-semibold text-gray-300 mb-2">No articles yet</h3>
+              <p className="text-gray-500">I'm currently working on some exciting content. Stay tuned!</p>
+            </motion.div>
+          )}
+        </div>
       </motion.div>
     </div>
   );

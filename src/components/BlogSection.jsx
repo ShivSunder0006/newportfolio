@@ -1,11 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Clock, ChevronRight } from 'lucide-react';
 import { blogPosts } from '../pages/BlogList';
+import Skeleton from './Skeleton';
+
+const BlogSkeleton = () => (
+  <div className="bg-card-blue/30 border border-indigo-500/20 rounded-2xl p-6 h-full">
+    <div className="flex items-center gap-4 mb-4">
+      <Skeleton className="w-24 h-4" />
+      <Skeleton className="w-20 h-4" />
+    </div>
+    <Skeleton className="h-8 w-3/4 mb-3" />
+    <Skeleton className="h-4 w-full mb-2" />
+    <Skeleton className="h-4 w-5/6 mb-6" />
+    <Skeleton className="h-5 w-28" />
+  </div>
+);
 
 export default function BlogSection() {
+  const [loading, setLoading] = useState(true);
   const recentPosts = blogPosts.slice(0, 3); // showing top 3
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section id="blog" className="py-20 relative">
@@ -28,9 +48,11 @@ export default function BlogSection() {
           <p className="text-xl text-gray-400">Thoughts on development, data viz, and AI.</p>
         </motion.div>
 
-        {recentPosts.length > 0 ? (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {recentPosts.map((post, index) => (
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {loading ? (
+            Array(3).fill(0).map((_, i) => <BlogSkeleton key={i} />)
+          ) : recentPosts.length > 0 ? (
+            recentPosts.map((post, index) => (
               <motion.div
                 key={post.slug}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -66,22 +88,22 @@ export default function BlogSection() {
                   </div>
                 </Link>
               </motion.div>
-            ))}
-          </div>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center py-16 bg-card-blue/10 rounded-2xl border border-indigo-500/20 max-w-2xl mx-auto"
-          >
-            <BookOpen className="w-12 h-12 text-indigo-500/50 mx-auto mb-4" />
-            <h3 className="text-2xl font-semibold text-gray-300 mb-2">My First Post is Cooking...</h3>
-            <p className="text-gray-500 px-6">
-              I'll be sharing articles here soon containing code snippets, interactive 3D visualizations, and in-depth tutorials.
-            </p>
-          </motion.div>
-        )}
+            ))
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="col-span-full text-center py-16 bg-card-blue/10 rounded-2xl border border-indigo-500/20 max-w-2xl mx-auto w-full"
+            >
+              <BookOpen className="w-12 h-12 text-indigo-500/50 mx-auto mb-4" />
+              <h3 className="text-2xl font-semibold text-gray-300 mb-2">My First Post is Cooking...</h3>
+              <p className="text-gray-500 px-6">
+                I'll be sharing articles here soon containing code snippets, interactive 3D visualizations, and in-depth tutorials.
+              </p>
+            </motion.div>
+          )}
+        </div>
 
         <motion.div 
           initial={{ opacity: 0 }}

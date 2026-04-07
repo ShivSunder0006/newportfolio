@@ -1,11 +1,39 @@
+import React, { useState, useEffect } from 'react';
 import { Code2, Github, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
-import { useState } from 'react';
+import Skeleton from './Skeleton';
+
+const ProjectSkeleton = () => (
+    <div className="bg-card-blue border border-slate-700/50 rounded-2xl overflow-hidden shadow-3d-dark flex flex-col h-[500px]">
+        <Skeleton className="h-56 w-full rounded-none" />
+        <div className="p-8 flex-1 flex flex-col">
+            <Skeleton className="h-8 w-3/4 mb-3" />
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-4 w-2/3 mb-6" />
+            <div className="flex flex-wrap gap-2 mb-6">
+                <Skeleton className="w-16 h-6" />
+                <Skeleton className="w-20 h-6" />
+                <Skeleton className="w-14 h-6" />
+            </div>
+            <div className="flex gap-4 mt-auto pt-4">
+                <Skeleton className="w-24 h-10 rounded-xl" />
+                <Skeleton className="w-28 h-10 rounded-xl ml-auto" />
+            </div>
+        </div>
+    </div>
+);
 
 const Projects = () => {
     const [showAll, setShowAll] = useState(false);
+    const [loading, setLoading] = useState(true);
     
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 1500);
+        return () => clearTimeout(timer);
+    }, []);
+
     const projects = [
         {
             title: 'MultiModal RAG System',
@@ -94,73 +122,81 @@ const Projects = () => {
                 layout
             >
                 <AnimatePresence mode="popLayout">
-                {displayedProjects.map((p, i) => (
-                    <motion.div 
-                        key={p.title + i} 
-                        variants={cardVariants} 
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        layout
-                        style={{ zIndex: projects.length - i }}
-                    >
-                        <Tilt
-                            tiltMaxAngleX={1}
-                            tiltMaxAngleY={1}
-                            perspective={1000}
-                            transitionSpeed={1000}
-                            scale={1.01}
-                            gyroscope={false}
-                            className="h-full"
+                {loading ? (
+                    Array(4).fill(0).map((_, i) => (
+                        <motion.div key={`skeleton-${i}`} variants={cardVariants} initial="hidden" animate="visible">
+                            <ProjectSkeleton />
+                        </motion.div>
+                    ))
+                ) : (
+                    displayedProjects.map((p, i) => (
+                        <motion.div 
+                            key={p.title + i} 
+                            variants={cardVariants} 
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            layout
+                            style={{ zIndex: projects.length - i }}
                         >
-                            <div className="bg-card-blue border border-slate-700/50 rounded-2xl overflow-hidden shadow-3d-dark flex flex-col group h-full transform-style-3d">
-                                <div className="h-56 w-full relative border-b border-slate-700/50 overflow-hidden transform-style-3d" style={{ transform: "translateZ(40px)" }}>
-                                    <img src={p.image} alt={p.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                                    <div className="absolute inset-0 bg-space-blue/60 group-hover:bg-transparent transition-all duration-300 flex items-center justify-center">
-                                        <Code2 className="w-16 h-16 text-white/50 group-hover:text-neon-cyan transition-all duration-500 group-hover:scale-125 drop-shadow-md" style={{ transform: "translateZ(60px)" }} />
+                            <Tilt
+                                tiltMaxAngleX={1}
+                                tiltMaxAngleY={1}
+                                perspective={1000}
+                                transitionSpeed={1000}
+                                scale={1.01}
+                                gyroscope={false}
+                                className="h-full"
+                            >
+                                <div className="bg-card-blue border border-slate-700/50 rounded-2xl overflow-hidden shadow-3d-dark flex flex-col group h-full transform-style-3d">
+                                    <div className="h-56 w-full relative border-b border-slate-700/50 overflow-hidden transform-style-3d" style={{ transform: "translateZ(40px)" }}>
+                                        <img src={p.image} alt={p.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                        <div className="absolute inset-0 bg-space-blue/60 group-hover:bg-transparent transition-all duration-300 flex items-center justify-center">
+                                            <Code2 className="w-16 h-16 text-white/50 group-hover:text-neon-cyan transition-all duration-500 group-hover:scale-125 drop-shadow-md" style={{ transform: "translateZ(60px)" }} />
+                                        </div>
+                                    </div>
+                                    <div className="p-8 flex-1 flex flex-col transform-style-3d" style={{ transform: "translateZ(30px)" }}>
+                                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-neon-cyan transition-colors" style={{ transform: "translateZ(20px)" }}>{p.title}</h3>
+                                        <p className="text-slate-400 text-sm mb-6 flex-1 leading-relaxed" style={{ transform: "translateZ(10px)" }}>
+                                            {p.desc}
+                                        </p>
+                                        <div className="flex flex-wrap gap-2 mb-6" style={{ transform: "translateZ(15px)" }}>
+                                            {p.tags.map(tag => (
+                                                <span key={tag} className="px-3 py-1 bg-space-blue border border-neon-cyan/20 rounded-md text-xs text-neon-cyan shadow-[inset_0_1px_4px_rgba(0,0,0,0.5)]">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="flex gap-4 mt-auto pt-4 relative z-50 pointer-events-auto">
+                                            {p.git ? (
+                                                <a href={p.git} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-neon-cyan bg-slate-800/40 hover:bg-slate-700/60 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect border border-slate-700/50 hover:border-neon-cyan/50 shadow-lg">
+                                                    <Github className="w-4 h-4" /> Code
+                                                </a>
+                                            ) : (
+                                                <button className="flex items-center gap-2 text-sm font-semibold text-slate-300 bg-slate-800/40 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect cursor-not-allowed opacity-50 border border-slate-700/50 shadow-lg">
+                                                    <Github className="w-4 h-4" /> Code
+                                                </button>
+                                            )}
+                                            {p.liveDemo ? (
+                                                <a href={p.liveDemo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-neon-indigo hover:text-white bg-neon-indigo/10 hover:bg-neon-indigo/20 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect ml-auto border border-neon-indigo/20 hover:border-neon-indigo/50 shadow-lg">
+                                                    Live Demo <ExternalLink className="w-4 h-4" />
+                                                </a>
+                                            ) : (
+                                                <button className="flex items-center gap-2 text-sm font-semibold text-neon-indigo bg-neon-indigo/10 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect ml-auto cursor-not-allowed opacity-50 border border-neon-indigo/20 shadow-lg">
+                                                    Live Demo <ExternalLink className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="p-8 flex-1 flex flex-col transform-style-3d" style={{ transform: "translateZ(30px)" }}>
-                                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-neon-cyan transition-colors" style={{ transform: "translateZ(20px)" }}>{p.title}</h3>
-                                    <p className="text-slate-400 text-sm mb-6 flex-1 leading-relaxed" style={{ transform: "translateZ(10px)" }}>
-                                        {p.desc}
-                                    </p>
-                                    <div className="flex flex-wrap gap-2 mb-6" style={{ transform: "translateZ(15px)" }}>
-                                        {p.tags.map(tag => (
-                                            <span key={tag} className="px-3 py-1 bg-space-blue border border-neon-cyan/20 rounded-md text-xs text-neon-cyan shadow-[inset_0_1px_4px_rgba(0,0,0,0.5)]">
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <div className="flex gap-4 mt-auto pt-4 relative z-50 pointer-events-auto">
-                                        {p.git ? (
-                                            <a href={p.git} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-neon-cyan bg-slate-800/40 hover:bg-slate-700/60 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect border border-slate-700/50 hover:border-neon-cyan/50 shadow-lg">
-                                                <Github className="w-4 h-4" /> Code
-                                            </a>
-                                        ) : (
-                                            <button className="flex items-center gap-2 text-sm font-semibold text-slate-300 bg-slate-800/40 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect cursor-not-allowed opacity-50 border border-slate-700/50 shadow-lg">
-                                                <Github className="w-4 h-4" /> Code
-                                            </button>
-                                        )}
-                                        {p.liveDemo ? (
-                                            <a href={p.liveDemo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-neon-indigo hover:text-white bg-neon-indigo/10 hover:bg-neon-indigo/20 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect ml-auto border border-neon-indigo/20 hover:border-neon-indigo/50 shadow-lg">
-                                                Live Demo <ExternalLink className="w-4 h-4" />
-                                            </a>
-                                        ) : (
-                                            <button className="flex items-center gap-2 text-sm font-semibold text-neon-indigo bg-neon-indigo/10 px-4 py-2.5 rounded-xl transition-all duration-300 press-effect ml-auto cursor-not-allowed opacity-50 border border-neon-indigo/20 shadow-lg">
-                                                Live Demo <ExternalLink className="w-4 h-4" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </Tilt>
-                    </motion.div>
-                ))}
+                            </Tilt>
+                        </motion.div>
+                    ))
+                )}
                 </AnimatePresence>
             </motion.div>
 
-            {projects.length > 4 && (
+            {!loading && projects.length > 4 && (
                 <motion.div 
                     layout
                     className="mt-16 flex justify-center"

@@ -1,11 +1,20 @@
+import React, { useState, useEffect } from 'react';
 import {
     Code2, Database, Terminal, GitBranch, Github, Boxes,
     BrainCircuit, Cpu, Network, LineChart, FileText, Camera, ScanText, FileJson
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
+import Skeleton from './Skeleton';
 
 const Skills = () => {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 1500);
+        return () => clearTimeout(timer);
+    }, []);
+
     // Mapping skills to appropriate, monochrome Lucide icons that fit the theme
     const skills = [
         { name: 'C', icon: <Code2 className="w-4 h-4 text-neon-cyan/70" /> },
@@ -78,29 +87,37 @@ const Skills = () => {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
             >
-                {skills.map((skill, i) => (
-                    <motion.div key={i} variants={itemVariants} style={{ transformStyle: "preserve-3d" }}>
-                        <Tilt
-                            tiltMaxAngleX={15}
-                            tiltMaxAngleY={15}
-                            perspective={800}
-                            transitionSpeed={1500}
-                            scale={1.1}
-                            gyroscope={true}
-                        >
-                            <span
-                                className="px-5 py-2.5 bg-card-blue text-slate-300 text-sm font-semibold rounded-full border border-slate-700/80 shadow-3d-dark hover-3d press-effect cursor-default select-none group relative overflow-hidden flex items-center gap-2 hover:border-neon-cyan/50 hover:text-white transition-colors transform-style-3d bg-opacity-80 backdrop-blur-sm"
-                                style={{ transform: "translateZ(20px)" }}
+                {loading ? (
+                    Array(15).fill(0).map((_, i) => (
+                        <div key={`skeleton-${i}`} className="px-5 py-2.5 rounded-full border border-slate-700/80 bg-card-blue/50 w-24 h-10 overflow-hidden relative">
+                            <Skeleton className="w-full h-full" />
+                        </div>
+                    ))
+                ) : (
+                    skills.map((skill, i) => (
+                        <motion.div key={i} variants={itemVariants} style={{ transformStyle: "preserve-3d" }}>
+                            <Tilt
+                                tiltMaxAngleX={15}
+                                tiltMaxAngleY={15}
+                                perspective={800}
+                                transitionSpeed={1500}
+                                scale={1.1}
+                                gyroscope={true}
                             >
-                                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-neon-cyan/20 to-neon-indigo/20 transform -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-in-out"></span>
-                                <div className="relative z-10 group-hover:scale-110 transition-transform duration-300" style={{ transform: "translateZ(30px)" }}>
-                                    {skill.icon}
-                                </div>
-                                <span className="relative z-10" style={{ transform: "translateZ(10px)" }}>{skill.name}</span>
-                            </span>
-                        </Tilt>
-                    </motion.div>
-                ))}
+                                <span
+                                    className="px-5 py-2.5 bg-card-blue text-slate-300 text-sm font-semibold rounded-full border border-slate-700/80 shadow-3d-dark hover-3d press-effect cursor-default select-none group relative overflow-hidden flex items-center gap-2 hover:border-neon-cyan/50 hover:text-white transition-colors transform-style-3d bg-opacity-80 backdrop-blur-sm"
+                                    style={{ transform: "translateZ(20px)" }}
+                                >
+                                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-neon-cyan/20 to-neon-indigo/20 transform -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-in-out"></span>
+                                    <div className="relative z-10 group-hover:scale-110 transition-transform duration-300" style={{ transform: "translateZ(30px)" }}>
+                                        {skill.icon}
+                                    </div>
+                                    <span className="relative z-10" style={{ transform: "translateZ(10px)" }}>{skill.name}</span>
+                                </span>
+                            </Tilt>
+                        </motion.div>
+                    ))
+                )}
             </motion.div>
         </section>
     );
