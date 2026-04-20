@@ -66,7 +66,7 @@ const Projects = () => {
         },
         {
             title: 'FSSAI Compliance Checker',
-            image: '/images/projects/rag.png', // Placeholder, please update
+            image: '/images/projects/fssai.png',
             desc: 'Food Safety Compliance Pipeline and UI redesign for rigorous standard checks.',
             tags: ['React', 'Python', 'Compliance'],
             liveDemo: 'https://huggingface.co/spaces/shivsunder0006/FSSAI',

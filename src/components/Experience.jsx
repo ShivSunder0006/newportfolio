@@ -99,10 +99,10 @@ const Experience = () => {
                             className={`relative flex flex-col md:flex-row items-center justify-between md:justify-normal md:w-1/2 ${i % 2 === 0 ? 'md:pr-12 md:self-start' : 'md:pl-12 md:self-end md:ml-auto'} group`}
                             style={{ transformStyle: "preserve-3d" }}
                         >
-                            <div className="absolute left-[-2rem] md:left-auto md:right-[-20px] w-10 h-10 rounded-full bg-space-blue border-4 border-neon-cyan z-10 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.6)]">
+                            <div className={`absolute left-[-2rem] ${i % 2 === 0 ? 'md:left-auto md:right-[-20px]' : 'md:hidden'} w-10 h-10 rounded-full bg-space-blue border-4 border-neon-cyan z-10 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.6)]`}>
                                 <div className="w-3 h-3 bg-neon-cyan rounded-full group-hover:scale-150 transition-transform duration-300"></div>
                             </div>
-                            {i % 2 !== 0 && <div className="hidden md:block absolute left-[-20px] w-10 h-10 rounded-full bg-space-blue border-4 border-neon-indigo z-10 flex items-center justify-center shadow-[0_0_15px_rgba(129,140,248,0.6)]">
+                            {i % 2 !== 0 && <div className="hidden md:flex absolute left-[-20px] w-10 h-10 rounded-full bg-space-blue border-4 border-neon-indigo z-10 items-center justify-center shadow-[0_0_15px_rgba(129,140,248,0.6)]">
                                 <div className="w-3 h-3 bg-neon-indigo rounded-full group-hover:scale-150 transition-transform duration-300"></div>
                             </div>}
 
